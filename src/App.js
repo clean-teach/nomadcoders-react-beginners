@@ -3,25 +3,33 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [loding, setLoading] = useState(true);
-  const [coins, setCoins] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const getMovies = async () => {
+    const json = await (await fetch('https://yts.mx/api/v2/list_movies.json')).json();
+    setMovies(json.data.movies);
+    setLoading(false);
+  };
   useEffect(() => {
-    fetch('https://api.coinpaprika.com/v1/tickers')
-    .then(response => response.json())
-    .then(json => {
-      setCoins(json);
-      setLoading(false);
-    })
+    getMovies();
   }, []);
 
   return (
     <div >
-      <h1>The Coins ({coins.length})</h1>
-      {loding ? <strong>Loding ...</strong> : (
-        <select name="" id="">
-          {coins.map((coin => (<option key={coin.id}>{coin.name} ({coin.symbol}) : $ {coin.quotes.USD.price} USD</option>)))}
-        </select>
-      )}
-    </div>
+      {loding ? <strong>Loding ...</strong> : <ul>{
+        movies.map(movie => (
+          <li key={movie.id}>
+            <img src={movie.medium_cover_image} alt="영화 커버 이미지" />
+            <h2>{movie.title}</h2>
+            <p>{movie.summary}</p>
+            <ul>
+              {movie.genres.map(genre => (
+                <li key={genre}>{genre}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }</ul> 
+    }</div>
   );
 }
 
