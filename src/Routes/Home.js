@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Loding from "../components/loding";
 import Movie from "../components/Movie";
 
 function Home () {
@@ -15,7 +16,7 @@ function Home () {
 
     return (
     <div >
-        {loding ? <strong>Loding ...</strong> : <ul>{
+        {loding ? <Loding /> : <ul>{
         movies.map(movie => (
             <Movie
             key={movie.id} 
